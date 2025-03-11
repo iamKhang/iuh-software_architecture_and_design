@@ -1,0 +1,51 @@
+@startuml Observer Pattern - Faculty Notification System
+
+interface Observer {
+    +update(notification: String): void
+}
+
+interface Subject {
+    +attach(observer: Observer): void
+    +detach(observer: Observer): void
+    +notify(message: String): void
+}
+
+class Student {
+    -studentId: String
+    -name: String
+    +Student(studentId: String, name: String)
+    +update(notification: String): void
+}
+
+class ClassMonitor {
+    -observers: List<Observer>
+    +attach(observer: Observer): void
+    +detach(observer: Observer): void
+    +notify(message: String): void
+    +sendNotification(message: String): void
+}
+
+class Class {
+    -className: String
+    -monitor: ClassMonitor
+    -students: List<Student>
+    +Class(className: String)
+    +addStudent(student: Student): void
+    +getMonitor(): ClassMonitor
+}
+
+class Faculty {
+    -facultyName: String
+    -classes: List<Class>
+    +Faculty(facultyName: String)
+    +addClass(class: Class): void
+}
+
+Observer <|.. Student
+Subject <|.. ClassMonitor
+ClassMonitor "1" -- "*" Student : notifies >
+Class "1" -- "1" ClassMonitor : has >
+Class "1" -- "*" Student : contains >
+Faculty "1" -- "*" Class : manages >
+
+@enduml
